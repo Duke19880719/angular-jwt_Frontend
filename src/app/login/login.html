@@ -1,0 +1,46 @@
+<div class="container">
+    <h1>儀錶板</h1>
+    <div class="card">
+        <h2>Access Token</h2>
+        <div class="token-value">Token :{{authService.authToken()?.Access_Token}}</div>
+        <p>過期時間: {{authService.authToken()?.Access_Token_Expire_Time}}</p>
+        <p>過期時間(本地時間)： 
+            {{
+                (authService.authToken()!.Access_Token_Expire_Time * 1000)
+                | date:'yyyy-MM-dd HH:mm:ss'
+            }}
+        </p>
+    </div> 
+    <div class="card">
+        <h2>Refresh Token</h2>
+        <div class="token-value">Token:{{authService.authToken()?.Refresh_Token}}</div>
+        <p>過期時間: {{authService.authToken()?.Refresh_Token_Expire_Time}}</p>
+        <p>過期時間(本地時間)： 
+            {{
+                (authService.authToken()!.Refresh_Token_Expire_Time * 1000)
+                | date:'yyyy-MM-dd HH:mm:ss'
+            }}
+    </div>
+    <div class="card">
+        <h2>輸入使用者帳號 (根據使用者做 呼叫Api角色控管，管理者帳號 admin)</h2>
+        <input type="text"  
+        placeholder="輸入使用者帳號" 
+        [value]="user_account()"
+        (input)="user_account.set($event.target.value)">
+
+    </div>
+    <div class="actions">
+        <button (click)="login()">登入，取得token</button>
+        <button (click)="call_api_test_token_Expired()">驗證token是否過期</button>
+        <br>
+        <button (click)="call_api_test_role()" class="btn-danger">
+                呼叫管理員 API (限 Admin)
+        </button>
+    </div>
+
+    <div class="card api-response">
+        <h2>API 回應</h2>
+        <pre>{{ Api_Message() }}</pre>
+    </div>
+
+</div>
