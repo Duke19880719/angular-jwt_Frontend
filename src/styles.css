@@ -1,1 +1,64 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 保持你原本的頂部對齊 */
+  padding: 60px 20px;
+  color: #202124;
+  
+  /* --- 沉浸式科技背景 --- */
+  background-color: #f0f4f8; /* 基礎底色 */
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(66, 133, 244, 0.1) 0%, transparent 35%),
+    radial-gradient(circle at 85% 85%, rgba(52, 168, 83, 0.08) 0%, transparent 35%),
+    linear-gradient(135deg, #eef2f7 0%, #dbe4ee 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* --- 科技網格層 --- */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-image: 
+    linear-gradient(rgba(66, 133, 244, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(66, 133, 244, 0.03) 1px, transparent 1px);
+  background-size: 45px 45px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* --- 浮動粒子層 --- */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  /* 透過多重陰影製造隨機粒子 */
+  box-shadow: 
+    15vw 20vh 2px #4285f4, 35vw 75vh 3px #34a853, 
+    75vw 15vh 2px #4285f4, 90vw 80vh 4px #ffffff,
+    25vw 55vh 2px #fbbc05, 60vw 40vh 3px #4285f4,
+    50vw 10vh 2px #34a853, 10vw 85vh 3px #ffffff;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+  animation: floatingParticles 30s infinite linear alternate;
+}
+
+@keyframes floatingParticles {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, -40px) scale(1.2); }
+  100% { transform: translate(-20px, 20px) scale(1); }
+}
+
