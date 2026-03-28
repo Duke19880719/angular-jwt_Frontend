@@ -1,4 +1,5 @@
-<div class="container">
+<!-- 1.0 vision 前端頁面， localStorage 存取 token 資料 -->
+<!-- <div class="container">
     <h1>儀錶板</h1>
     <div class="card">
         <h2>Access Token</h2>
@@ -43,4 +44,57 @@
         <pre>{{ Api_Message() }}</pre>
     </div>
 
+</div> -->
+
+
+<!-- -------------------------------------------------------------- -->
+
+<!-- 2.0 vision 前端頁面，改為使用 cookies 存取 Refresh Token，
+ Access Token 則放在記憶體中 (Signal)，增加安全性 -->
+
+<div class="container">
+    <h1>Jwt 儀錶板 (Cookie 版)</h1>
+
+    <div class="card">
+        <h2>目前身分：{{ authService.authToken()?.Role || '未登入' }}</h2>
+        <div class="card-content">
+            <h3>Access Token (存於記憶體 Signal)</h3>
+            <div class="token-value">{{ authService.authToken()?.Access_Token || '尚未取得 Token' }}</div>
+            
+            @if (authService.authToken()) {
+                <p>
+                    ⚡ 過期時間：{{ (authService.authToken()!.Access_Token_Expire_Time * 1000) | date:'HH:mm:ss' }}
+                </p>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Refresh Token 狀態 (HttpOnly Cookie)</h3>
+        <div class="status-box" [class.active]="authService.authToken()">
+            @if (authService.authToken()) {
+                <span class="status-icon">✅</span> 已存入瀏覽器 HttpOnly Cookie (JS 不可存取，安全！)
+            } @else {
+                <span class="status-icon">❌</span> 未登入
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <input type="text" 
+               placeholder="輸入帳號 (管理員請打 admin)" 
+               [value]="user_account()" 
+               (input)="user_account.set($any($event.target).value)">
+    </div>
+
+    <div class="actions">
+        <button (click)="login()" class="btn-primary">安全登入</button>
+        <button (click)="call_api_test_token_Expired()" class="btn-info">驗證並自動刷新 Token</button>
+        <button (click)="call_api_test_role()" class="btn-danger">測試 Admin 權限</button>
+    </div>
+
+    <div class="card api-response">
+        <h2>API 執行結果</h2>
+        <pre>{{ Api_Message() }}</pre>
+    </div>
 </div>

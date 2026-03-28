@@ -6,6 +6,12 @@ import { HttpClient } from '@angular/common/http';
 import { tokenModel } from '../model/token_model';
 //目標功能:攔截 401 並自動刷新 Token
 
+//2.0 和 1.0 的差異：
+// 加入 withCredentials: true 
+// 讓瀏覽器自動帶上 HttpOnly Cookie 中的 Refresh Token，增加安全性
+
+//省略掉 Refresh Token 的前端傳送，因為後端會從 HttpOnly Cookie 中自動讀取，增加安全性
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const authService = inject(AuthService);
     const http = inject(HttpClient);
@@ -18,7 +24,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         authReq = req.clone({
             setHeaders: {
                 Authorization: `Bearer ${current_access_token}`
-            }
+            },
+            withCredentials: true
         });
     }
     //處理錯誤更新token
@@ -30,9 +37,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                 const token_data = authService.authToken();
                 if (token_data ) {
                     return http.post<tokenModel>(api, {
-                        Access_Token: token_data.Access_Token,
-                        Refresh_Token: token_data.Refresh_Token
-                    }).pipe(
+                        Access_Token: token_data.Access_Token
+                        // Refresh_Token 不需要前端傳送，因為後端會從 HttpOnly Cookie 中自動讀取，增加安全性
+                        // Refresh_Token: token_data.Refresh_Token
+                    }, { withCredentials: true }).pipe(
                         switchMap((newTokenData) => {
                         //更新 Token    
                         authService.updateToken(newTokenData); 
@@ -41,7 +49,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                         const newAuthReq = req.clone({
                             setHeaders: {
                                 Authorization: `Bearer ${newTokenData.Access_Token}`
-                            }
+                            },
+                            withCredentials: true
                         });
                         return next(newAuthReq);
                         }),
